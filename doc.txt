@@ -1,0 +1,11 @@
+geraVigencia - params
+{
+    genFirstDate: gera primeira data
+    bloqFirstDate: verifica se primeira data é válida
+    genNextDate: gera próxima data
+    bloqNextDate: verifica se próxima data é válida
+    loopController: verifica se uma próxima data deve ser gerada
+
+    genList: booleano pra decidir se gera uma vigência ou mais
+    forceSort (opt): boolean pra forçar ordenação ao final da operação
+}
