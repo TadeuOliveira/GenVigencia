@@ -2,7 +2,7 @@ const vigenciaHelpers = {
     formatId: (date) => {
         return date.toISOString().substr(0,10)
     },
-    formatLabel: (date) => {
+    formatIdLabel: (date) => {
         let id = date.toISOString().substr(0,10)
         let label = id.split('-').reverse().join('/')
         return {id,label}
@@ -48,3 +48,5 @@ function geraVigencia(isodate,params){
 
     return vigenciaList
 }
+exports.geraVigencia = geraVigencia
+exports.helpers = vigenciaHelpers
