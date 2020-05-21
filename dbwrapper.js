@@ -6,6 +6,11 @@ const vigenciaHelpers = {
         let id = date.toISOString().substr(0,10)
         let label = id.split('-').reverse().join('/')
         return {id,label}
+    },
+    skipNDays: (date,n) => {
+        let d = new Date(date)
+        d.setDate(d.getDate() + n)
+        return d.toISOString().substr(0,10)
     }
 }
 
@@ -23,7 +28,6 @@ function geraVigencia(isodate,params){
     let primeiraVigencia = genFirstDate.func(isodate,genFirstDate.args)
 
     let bloqPrimeiraVigencia = bloqFirstDate ? bloqFirstDate.func(primeiraVigencia,bloqFirstDate.args) : false
-
     while(bloqPrimeiraVigencia){
 
         primeiraVigencia = genNextDate.func(primeiraVigencia,genNextDate.args)
