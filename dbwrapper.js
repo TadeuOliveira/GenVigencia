@@ -32,6 +32,19 @@ const vigenciaHelpers = {
         vigencia.setMonth(vigencia.getMonth() + (vigencia.getDate() >= proximaRegra.vigencia))
         vigencia.setDate(proximaRegra.vigencia)
         return vigencia.toISOString().substr(0,10)
+    },
+    getVigenciaAgendada: (date,agenda) => {
+        let d = new Date(date)
+        let {vigencia} = agenda.find(e => {
+            let minDate = new Date(e.min)
+            let maxDate = new Date(e.max)
+            return (d >= minDate) && (d <= maxDate)
+        })
+        return vigencia
+    },
+    getNextVigenciaAgendada: (date,agenda) => {
+        let index = findIndex(e => e.vigencia == date)
+        return agenda[index+1]
     }
 }
 

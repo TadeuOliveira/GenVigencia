@@ -1,5 +1,28 @@
 const dbw = require('./dbwrapper')
 
+let agenda = [
+    {
+        min: '2020-05-01',
+        max: '2020-05-15',
+        vigencia: '2020-06-01'
+    },
+    {
+        min: '2020-05-16',
+        max: '2020-05-31',
+        vigencia: '2020-06-15'
+    },
+    {
+        min: '2020-06-01',
+        max: '2020-06-15',
+        vigencia: '2020-07-01'
+    },
+    {
+        min: '2020-06-16',
+        max: '2020-06-30',
+        vigencia: '2020-07-15'
+    }
+]
+
 let regras = [
     {
         min: 1,
@@ -15,19 +38,27 @@ let regras = [
 
 let vigConfig = {
     genFirstDate: {
-        func: (isodate) => {
-            return dbw.helpers.skipNDays(isodate,5)
+        func: (isodate,params) => {
+            let {agenda} = params
+            return dbw.helpers.getVigenciaAgendada(isodate,agenda)
         },
+        args: {
+            agenda: agenda
+        }
     },
     bloqFirstDate: {
         func: (isodate,params,initdate) => {
-            return dbw.helpers.isAfterNDays(isodate,initdate,11)
+            return false
         },
     },
     genNextDate: {
-        func: (isodate) => {
-            return dbw.helpers.skipNDays(isodate,5)
+        func: (isodate,params) => {
+            let {agenda} = params
+            return dbw.helpers.getNextVigenciaAgendada(isodate,agenda)
         },
+        args: {
+            agenda: agenda
+        }
     },
     genList: false
 }
