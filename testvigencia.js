@@ -20,6 +20,11 @@ let agenda = [
         min: '2020-06-16',
         max: '2020-06-30',
         vigencia: '2020-07-15'
+    },
+    {
+        min: '2020-07-01',
+        max: '2020-07-15',
+        vigencia: '2020-08-01'
     }
 ]
 
@@ -60,7 +65,15 @@ let vigConfig = {
             agenda: agenda
         }
     },
-    genList: false
+    genList: true,
+    loopController: {
+        func: (isodate,loopIndex,listSize,params,initdate) => {
+            return listSize < 4
+        },
+        args: {
+            agenda: agenda
+        }
+    }
 }
 
 console.log(dbw.geraVigencia('2020-05-22',vigConfig))

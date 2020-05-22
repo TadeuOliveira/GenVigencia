@@ -1,9 +1,15 @@
-const vigenciaHelpers = {
+//apagar coisas de node depois
+
+global.vigenciaHelpers = {
     formatId: (date) => {
         return date.toISOString().substr(0,10)
     },
     formatIdLabel: (date) => {
         let id = date.toISOString().substr(0,10)
+        let label = id.split('-').reverse().join('/')
+        return {id,label}
+    },
+    convertIdToIdLabel: (id) => {
         let label = id.split('-').reverse().join('/')
         return {id,label}
     },
@@ -43,12 +49,14 @@ const vigenciaHelpers = {
         return vigencia
     },
     getNextVigenciaAgendada: (date,agenda) => {
-        let index = findIndex(e => e.vigencia == date)
-        return agenda[index+1]
+        let index = agenda.findIndex(e => e.vigencia == date)
+        return agenda[index+1].vigencia
     }
 }
 
 function geraVigencia(isodate,params){
+
+    let helpers = vigenciaHelpers
     let { 
         genFirstDate,
         bloqFirstDate,
@@ -58,9 +66,7 @@ function geraVigencia(isodate,params){
         genList,
         forceSort
     } = params
-
     let primeiraVigencia = genFirstDate.func(isodate,genFirstDate.args)
-
     let bloqPrimeiraVigencia = bloqFirstDate ? bloqFirstDate.func(primeiraVigencia,bloqFirstDate.args,isodate) : false
     while(bloqPrimeiraVigencia){
         primeiraVigencia = genNextDate.func(primeiraVigencia,genNextDate.args,isodate)
@@ -68,18 +74,16 @@ function geraVigencia(isodate,params){
     }
 
     if(!genList) return primeiraVigencia
-    
-    let vigenciaList = [primeiraVigencia]
+    let vigenciaList = [helpers.convertIdToIdLabel(primeiraVigencia)]
     let proximaVigencia = primeiraVigencia
-    let loopIndex = 0
+    let loopIndex = 0, listSize = 0
     
-    while(loopController.func(proximaVigencia,loopIndex,loopController.args,isodate)){
-
-        proximaVigencia = genNextDate.func(primeiraVigencia,genNextDate.arg,isodates)
-
-        bloqProximaVigencia = bloqNextDate.func(primeiraVigencia,bloqFirstDate.args,isodate)
-
-        if(!bloqProximaVigencia) vigenciaList.push(proximaVigencia)
+    while(loopController.func(proximaVigencia,loopIndex,listSize,loopController.args,isodate)){
+        proximaVigencia = genNextDate.func(proximaVigencia,genNextDate.args,isodate)
+        bloqProximaVigencia = bloqNextDate ? bloqNextDate.func(primeiraVigencia,bloqFirstDate.args,isodate) : false
+        if(!bloqProximaVigencia) vigenciaList.push(helpers.convertIdToIdLabel(proximaVigencia))
+        loopIndex++
+        listSize = vigenciaList.length
     }
 
     return vigenciaList
