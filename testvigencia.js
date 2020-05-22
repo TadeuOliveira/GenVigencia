@@ -2,6 +2,11 @@ const dbw = require('./dbwrapper')
 
 let agenda = [
     {
+        min: '2020-04-16',
+        max: '2020-04-30',
+        vigencia: '2020-05-15'
+    },
+    {
         min: '2020-05-01',
         max: '2020-05-15',
         vigencia: '2020-06-01'
@@ -53,44 +58,55 @@ let regras = [
 
 let vigConfig = {
     genFirstDate: {
-        func: (isodate,params) => {
-            let {agenda} = params
-            return dbw.helpers.getVigenciaAgendada(isodate,agenda)
+        func: (isodate,args) => {
+            let {iniVig} = args
+            let d = new Date(isodate+'T00:00:00')
+            let skipMonth = d.getDate() > iniVig
+            d.setMonth(d.getMonth() + skipMonth)
+            d.setDate(iniVig)
+            return dbw.helpers.formatId(d)
         },
         args: {
-            agenda: agenda
+            iniVig: 20
         }
     },
     bloqFirstDate: {
-        func: (isodate,params,initdate) => {
-            return false
+        func: (isodate,args,initdate) => {
+            return !dbw.helpers.isAfterNDays(isodate,initdate,10)
         },
     },
     genNextDate: {
-        func: (isodate,params) => {
-            let {agenda} = params
-            return dbw.helpers.getNextVigenciaAgendada(isodate,agenda)
+        func: (isodate,args) => {
+            let {iniVig,finVig} = args
+            let d = new Date(isodate+'T00:00:00')
+            let reachedEnd = d.getDate() == finVig
+            d.setMonth(d.getMonth() + reachedEnd)
+            let newDate = reachedEnd ? iniVig : d.getDate()+1
+            d.setDate(newDate)
+            return dbw.helpers.formatId(d)
         },
         args: {
-            agenda: agenda
+            iniVig: 20,
+            finVig: 25
         }
     },
     genList: true,
     loopController: {
-        func: (isodate,loopIndex,listSize,params,initdate) => {
-            return listSize < 4
+        func: (isodate,loopIndex,list,args,initdate) => {
+            let {finVig} = args
+            let primeiraVigencia = new Date(list[0].id+'T00:00:00')
+            let dataAtual = new Date(isodate+'T00:00:00')
+            return dataAtual.getDate() < finVig || dataAtual.getMonth()-primeiraVigencia.getMonth() < 1
         },
         args: {
-            agenda: agenda
+            finVig: 25
         }
     },
     bloqNextDate: {
-        func: (isodate,loopIndex,listSize,params,initdate) => {
-            let d = new Date(isodate+'T00:00:00')
-            return d.getMonth() == 7
+        func: (isodate,loopIndex,list,args,initdate) => {
+            return false
         }
-    },
-    forceSort: true
+    }
 }
 
-console.log(dbw.geraVigencia('2020-05-22',vigConfig))
+console.log(dbw.geraVigencia('2020-05-12',vigConfig))

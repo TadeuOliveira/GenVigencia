@@ -21,7 +21,7 @@ global.vigenciaHelpers = {
     isAfterNDays: (currdate,initdate,n) => {
         let currd = new Date(currdate+'T00:00:00')
         let initd = new Date(initdate+'T00:00:00')
-        return (currd - initd < 86400000*n)
+        return ((currd - initd) > 86400000*n)
     },
     getVigencia: (date,regras) => {
         let d = new Date(date+'T00:00:00')
@@ -54,6 +54,12 @@ global.vigenciaHelpers = {
     }
 }
 
+global.templatesVigencia = {
+
+
+
+}
+
 function geraVigencia(isodate,params){
 
     let helpers = vigenciaHelpers
@@ -71,16 +77,17 @@ function geraVigencia(isodate,params){
     while(bloqPrimeiraVigencia){
         primeiraVigencia = genNextDate.func(primeiraVigencia,genNextDate.args,isodate)
         bloqPrimeiraVigencia = bloqFirstDate.func(primeiraVigencia,bloqFirstDate.args,isodate)
+        console.log({bloqPrimeiraVigencia,primeiraVigencia})
     }
 
     if(!genList) return primeiraVigencia
     let vigenciaList = [helpers.convertIdToIdLabel(primeiraVigencia)]
     let proximaVigencia = primeiraVigencia
-    let loopIndex = 0, listSize = 0
+    let loopIndex = 0
     
-    while(loopController.func(proximaVigencia,loopIndex,listSize,loopController.args,isodate)){
+    while(loopController.func(proximaVigencia,loopIndex,vigenciaList,loopController.args,isodate)){
         proximaVigencia = genNextDate.func(proximaVigencia,genNextDate.args,isodate)
-        bloqProximaVigencia = bloqNextDate ? bloqNextDate.func(proximaVigencia,loopIndex,listSize,bloqNextDate.args,isodate) : false
+        bloqProximaVigencia = bloqNextDate ? bloqNextDate.func(proximaVigencia,loopIndex,vigenciaList,bloqNextDate.args,isodate) : false
         if(!bloqProximaVigencia) vigenciaList.push(helpers.convertIdToIdLabel(proximaVigencia))
         loopIndex++
         listSize = vigenciaList.length
