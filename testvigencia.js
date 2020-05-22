@@ -1,28 +1,35 @@
 const dbw = require('./dbwrapper')
 
+let regras = [
+    {
+        min: 1,
+        max: 10,
+        vigencia: 20
+    },
+    {
+        min: 11,
+        max: 31,
+        vigencia: 20
+    },
+]
+
 let vigConfig = {
     genFirstDate: {
         func: (isodate) => {
             return dbw.helpers.skipNDays(isodate,5)
         },
-        args: {
-        }
     },
     bloqFirstDate: {
-        func: (isodate) => {
-            let d = new Date(isodate)
-            return d.getDate() > 20
+        func: (isodate,params,initdate) => {
+            return dbw.helpers.isAfterNDays(isodate,initdate,11)
         },
-        args: {
-        }
     },
     genNextDate: {
         func: (isodate) => {
             return dbw.helpers.skipNDays(isodate,5)
         },
-        args: {
-        }
-    }
+    },
+    genList: false
 }
 
-console.log(dbw.geraVigencia('2020-05-20',vigConfig))
+console.log(dbw.geraVigencia('2020-05-22',vigConfig))
