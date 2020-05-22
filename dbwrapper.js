@@ -86,6 +86,17 @@ function geraVigencia(isodate,params){
         listSize = vigenciaList.length
     }
 
+    if(forceSort){
+        vigenciaList.sort((primeiro,segundo) => {
+            let dataPrimeiro = new Date(primeiro.id)
+            let dataSegundo  = new Date(segundo.id)
+            let diff = dataPrimeiro - dataSegundo
+            if(diff < 0) return -1;
+            if(diff > 0) return 1;
+            else return 0;
+        })   
+    }
+
     return vigenciaList
 }
 exports.geraVigencia = geraVigencia

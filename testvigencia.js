@@ -89,7 +89,8 @@ let vigConfig = {
             let d = new Date(isodate+'T00:00:00')
             return d.getMonth() == 7
         }
-    }
+    },
+    forceSort: true
 }
 
 console.log(dbw.geraVigencia('2020-05-22',vigConfig))
