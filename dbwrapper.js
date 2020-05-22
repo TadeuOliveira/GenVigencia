@@ -80,7 +80,7 @@ function geraVigencia(isodate,params){
     
     while(loopController.func(proximaVigencia,loopIndex,listSize,loopController.args,isodate)){
         proximaVigencia = genNextDate.func(proximaVigencia,genNextDate.args,isodate)
-        bloqProximaVigencia = bloqNextDate ? bloqNextDate.func(primeiraVigencia,bloqFirstDate.args,isodate) : false
+        bloqProximaVigencia = bloqNextDate ? bloqNextDate.func(proximaVigencia,loopIndex,listSize,bloqNextDate.args,isodate) : false
         if(!bloqProximaVigencia) vigenciaList.push(helpers.convertIdToIdLabel(proximaVigencia))
         loopIndex++
         listSize = vigenciaList.length

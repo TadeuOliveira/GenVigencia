@@ -25,7 +25,17 @@ let agenda = [
         min: '2020-07-01',
         max: '2020-07-15',
         vigencia: '2020-08-01'
-    }
+    },
+    {
+        min: '2020-07-16',
+        max: '2020-07-30',
+        vigencia: '2020-08-15'
+    },
+    {
+        min: '2020-08-01',
+        max: '2020-08-15',
+        vigencia: '2020-09-01'
+    } 
 ]
 
 let regras = [
@@ -72,6 +82,12 @@ let vigConfig = {
         },
         args: {
             agenda: agenda
+        }
+    },
+    bloqNextDate: {
+        func: (isodate,loopIndex,listSize,params,initdate) => {
+            let d = new Date(isodate+'T00:00:00')
+            return d.getMonth() == 7
         }
     }
 }
