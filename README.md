@@ -5,6 +5,7 @@
 * [Getting Started](#getting-started)
   * [Pré-requisitos](#pré-requisitos)
   * [Instalação](#instalação)
+  * [Execução](#execução)
  * [Forma de uso](#forma-de-uso)
  * [Argumentos](#argumentos)
  * [Retorno](#retorno)
@@ -12,7 +13,11 @@
 	* [Exemplo 1](#exemplo-1)
 	* [Exemplo 2](#exemplo-2)
 	* [Exemplo 3](#exemplo-3)
-* [Próximos passos](#próximos-passos)
+* [Templates](#templates)
+	* [Descrição](#descrição)
+	* [Forma de uso](#forma-de-uso)
+	* [Templates disponíveis](#templates-disponíveis)
+
 <!-- ABOUT THE PROJECT -->
 ## Sobre o Projeto
 Este programa gera uma ou mais datas a partir de uma data de entrada e configurações introduzidas pelo usuário. Ele foi motivado pelo seguinte problema: após o fechamento de um contrato, não necessariamente deseja-se que este entre em vigor imediatamente após sua data de assinatura. Esta data referida é a data de vigência - termo usado exaustivamente na documentação. 
@@ -36,9 +41,14 @@ O único pré-requisito é possuir o [Node](https://nodejs.org/en/) instalado em
 ```sh
 git clone https://github.com/TadeuOliveira/GenVigencia.git
 ```
-## Forma de uso
+
+### Execução
 
 Edite o arquivo ```testvigencia.js``` e execute-o com ```node testvigencia.js``` tendo em mente a documentação a seguir.
+
+## Forma de uso
+
+Aqui, será explicado todo o processo de como criar uma vigência usando este _"framework"_. Mesmo que para você baste usar um [template](#templates) sem adição ou sobrescrição de propriedades, a leitura deste segmento é importante para saber como a coisa funciona por debaixo dos panos.
 
 ### Visão geral
 
@@ -304,6 +314,43 @@ let vigConfig = {
 }
 ```
 
-## Próximos passos
+## Templates
 
-Este projeto mostra grande eficácia para cálculos complexos de vigência, como no [exemplo 3](#exemplo-3), mas não é verdade para cálculos mais rasos. Por isso, serão criados boilerplates para estes casos, podendo ter apenas campos específicos alterados.
+### Descrição
+
+Este projeto mostra grande eficácia para cálculos complexos de vigência, como no [exemplo 3](#exemplo-3), mas não é verdade para cálculos mais rasos. Por isso, serão criados templates para estes casos, podendo ter apenas campos específicos alterados. 
+
+Os templates receberão argumentos específicos para cada caso e, além disso, um objeto **updates** contendo as alterações necessárias. Por exemplo: se um template possui apenas a chave _genFirstDate_, pode ser passado na chave updates um objeto com chaves como _bloqFirstDate_ e _genNextDate_ para inserir um critério de bloqueio e um método para a geração de uma nova data. Ou então, a chave _genList_ como true e um _loopController_ juntamente com _genNextDate_ para gerar uma lista, ao invés de um valor apenas. Pode, também, sobrescrever o método em _genFirstDate_. Estes são apenas exemplos, mas a ideia é que tudo que está em updates será acrescentado ou reescreverá as informações no template.
+
+### Forma de uso
+
+Seguem exemplos de como usar templates para gerar regras simples de vigência rapidamente:
+```
+//importando template de vigência agendada
+console.log('Agendada, apenas uma data:')
+console.log(dbw.geraVigencia(
+    '2020-05-12',
+    dbw.templates.agendada(agenda)
+))
+
+//também é possível sobrecarregar os templates incluindo novas chaves
+console.log('Agendada, uma lista de 3 datas:')
+console.log(dbw.geraVigencia(
+    '2020-05-12',
+    dbw.templates.agendada(agenda,{
+        genList: true,
+        loopController: {
+            func: (isodate,loopIndex,list,args,initdate) => {
+                return list.length < 3
+            }
+        }
+    })
+))
+
+```
+### Templates disponíveis
+
+Segue uma descrição dos templates implementados atualmente:
+
+- **agendada**: recebe uma agenda, retorna a data de vigência que satisfaça a seguinte regra: a data atual deve estar entre a data mínima e a data máxima em alguma entrada na agenda.
+- **direta**: recebe um objeto de regras, retorna a data de vigência que satisfaça a seguinte regra: o dia atual deve estar entre o dia mínimo e o dia máximo em alguma entrada nas regras.

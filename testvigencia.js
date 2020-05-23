@@ -42,20 +42,64 @@ let agenda = [
         vigencia: '2020-09-01'
     } 
 ]
+//importando template de vigência agendada
+console.log('Agendada, apenas uma data:')
+console.log(dbw.geraVigencia(
+    '2020-05-12',
+    dbw.templates.agendada(agenda)
+))
+
+console.log('Agendada, uma lista de 3 datas:')
+//também é possível sobrecarregar os templates incluindo novas chaves
+console.log(dbw.geraVigencia(
+    '2020-05-12',
+    dbw.templates.agendada(agenda,{
+        genList: true,
+        loopController: {
+            func: (isodate,loopIndex,list,args,initdate) => {
+                return list.length < 3
+            }
+        }
+    })
+))
 
 let regras = [
     {
         min: 1,
-        max: 10,
-        vigencia: 20
+        max: 15,
+        vigencia: 1
     },
     {
-        min: 11,
+        min: 16,
         max: 31,
-        vigencia: 20
+        vigencia: 15
     },
 ]
-
+//também é possível sobrecarregar os templates incluindo novas chaves
+console.log('direta, com 3 datas, evitando dias 01')
+console.log(dbw.geraVigencia(
+    '2020-05-12',
+    dbw.templates.direta(regras,{
+        bloqFirstDate: {
+            func: (isodate,args,initdate) => {
+                let d = new Date(isodate+'T00:00:00')
+                return d.getDate() == 1
+            }
+        },
+        genList: true,
+        loopController: {
+            func: (isodate,loopIndex,list,args,initdate) => {
+                return list.length < 3
+            }
+        },
+        bloqNextDate: {
+            func: (isodate,args,initdate) => {
+                let d = new Date(isodate+'T00:00:00')
+                return d.getDate() == 1
+            }
+        },
+    })
+))
 let vigConfig = {
     genFirstDate: {
         func: (isodate,args) => {
@@ -96,4 +140,4 @@ let vigConfig = {
     }
 }
 
-console.log(dbw.geraVigencia('2020-05-11',vigConfig))
+//console.log(dbw.geraVigencia('2020-05-11',vigConfig))

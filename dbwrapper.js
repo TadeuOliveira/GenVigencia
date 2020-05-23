@@ -90,7 +90,6 @@ function geraVigencia(isodate,params){
     while(bloqPrimeiraVigencia){
         primeiraVigencia = genNextDate.func(primeiraVigencia,genNextDate.args,isodate)
         bloqPrimeiraVigencia = bloqFirstDate.func(primeiraVigencia,bloqFirstDate.args,isodate)
-        console.log({bloqPrimeiraVigencia,primeiraVigencia})
     }
 
     if(!genList) return primeiraVigencia
@@ -119,5 +118,53 @@ function geraVigencia(isodate,params){
 
     return vigenciaList
 }
+
+const vigenciaTemplates = {
+    
+    agendada: (agenda,updates) => {
+        let helpers = vigenciaHelpers
+        let tpl = {
+            genFirstDate: {
+                func: (isodate, args) => {
+                    let {agenda} = args
+                    return helpers.getVigenciaAgendada(isodate,agenda)
+                },
+                args: {agenda}
+            },
+            genNextDate: {
+                func: (isodate, args) => {
+                    let {agenda} = args
+                    return helpers.getNextVigenciaAgendada(isodate,agenda)
+                },
+                args: {agenda}
+            }
+        }
+        let config = Object.assign(tpl,updates)
+        return config
+    },
+    direta: (regras,updates) => {
+        let helpers = vigenciaHelpers
+        let tpl = {
+            genFirstDate: {
+                func: (isodate, args) => {
+                    let {regras} = args
+                    return helpers.getVigencia(isodate,regras)
+                },
+                args: {regras}
+            },
+            genNextDate: {
+                func: (isodate, args) => {
+                    let {regras} = args
+                    return helpers.getNextVigencia(isodate,regras)
+                },
+                args: {regras}
+            }
+        }
+        let config = Object.assign(tpl,updates)
+        return config
+    }
+}
+
 exports.geraVigencia = geraVigencia
 exports.helpers = vigenciaHelpers
+exports.templates = vigenciaTemplates
