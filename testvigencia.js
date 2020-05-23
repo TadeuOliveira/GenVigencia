@@ -59,54 +59,41 @@ let regras = [
 let vigConfig = {
     genFirstDate: {
         func: (isodate,args) => {
-            let {iniVig} = args
-            let d = new Date(isodate+'T00:00:00')
-            let skipMonth = d.getDate() > iniVig
-            d.setMonth(d.getMonth() + skipMonth)
-            d.setDate(iniVig)
-            return dbw.helpers.formatId(d)
+           let {regras} = args
+           return dbw.helpers.getVigenciaOneCase(isodate,regras) 
         },
         args: {
-            iniVig: 20
+            regras
         }
     },
     bloqFirstDate: {
         func: (isodate,args,initdate) => {
-            return !dbw.helpers.isAfterNDays(isodate,initdate,10)
+            return false
         },
     },
     genNextDate: {
         func: (isodate,args) => {
-            let {iniVig,finVig} = args
-            let d = new Date(isodate+'T00:00:00')
-            let reachedEnd = d.getDate() == finVig
-            d.setMonth(d.getMonth() + reachedEnd)
-            let newDate = reachedEnd ? iniVig : d.getDate()+1
-            d.setDate(newDate)
-            return dbw.helpers.formatId(d)
+            let {regras} = args
+            return dbw.helpers.getNextVigenciaOneCase(isodate,regras)
         },
         args: {
-            iniVig: 20,
-            finVig: 25
+            regras
         }
     },
-    genList: true,
+    genList: false,
     loopController: {
         func: (isodate,loopIndex,list,args,initdate) => {
-            let {finVig} = args
-            let primeiraVigencia = new Date(list[0].id+'T00:00:00')
-            let dataAtual = new Date(isodate+'T00:00:00')
-            return dataAtual.getDate() < finVig || dataAtual.getMonth()-primeiraVigencia.getMonth() < 1
+            
         },
         args: {
-            finVig: 25
+            
         }
     },
     bloqNextDate: {
         func: (isodate,loopIndex,list,args,initdate) => {
-            return false
+            
         }
     }
 }
 
-console.log(dbw.geraVigencia('2020-05-12',vigConfig))
+console.log(dbw.geraVigencia('2020-05-11',vigConfig))

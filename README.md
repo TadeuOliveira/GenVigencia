@@ -107,12 +107,14 @@ Algumas operações podem ser recorrentes nesta manipulação de datas. Para ist
 - isAfterNDays: recebe uma data corrente (no formato _YYYY-mm-dd_), uma data destino (no mesmo formato) e um número _n_. Retorna um booleano, indica se a distância entre as datas é maior do que _n_ dias.
 - getVigencia: recebe uma data no formato _YYYY-mm-dd_ e uma lista contendo objetos de regras, com as chaves min, max e vigencia, todos inteiros. Esta função calcula a data de vigência de forma que o dia da data de entrada esteja no intervalo fechado de min a max de algum dos objetos em regras. Por este motivo, **É INDISPENSÁVEL QUE TODOS OS 31 DIAS ESTEJAM CONTEMPLADOS NAS REGRAS** _(PS: não tem problema que nem todos os meses tenham 31 dias)_. Encontrado este objeto em regras, o dia de vigência será o valor presente na chave vigencia. O critério adotado para definir o mês é que o dia de vigência seja menor do que max.
 - getNextVigencia: dispõe do mesmo input de getVigencia. No entanto, a data de entrada trata-se de uma vigência já calculada. É feita uma checagem no objeto de regras para que seja retornada a data de vigência posterior à recebida.
+- getVigenciaOneCase: similar a getVigencia, porém, para o caso especial onde há apenas uma data de vigência - ocasionando em possíveis incrementos de dois meses.
+- getNextVigenciaOneCase: pensado para ser usado em conjunto com getVigenciaOneCase. Simplesmente avança um mês.
 - getVigenciaAgendada: similar ao _getVigencia_, porém, usando uma agenda. A agenda dispõe das mesmas chaves (min, max e vigencia), no entanto, são todas datas no formato _'YYYY-mm-dd'_ ao invés de inteiros. Neste modelo, é simplesmente buscada a entrada da agenda onde a data de entrada encontre-se no intervalo de min e max, retornando a data na chave _vigencia_
 - getNextVigenciaAgendada: busca na agenda a próxima data de vigência.
 
 ## Exemplos
 
-Serão apresentados alguns exemplos de objetos **vigenciaConfig** e o valor retornado pelo programa. Em todos os casos, será considerada a data de entrada _2020-05-12_
+Serão apresentados alguns exemplos de objetos **vigenciaConfig** e o valor retornado pelo programa. Em todos os casos, será considerada a data de entrada _2020-05-12_. O objeto dbwrapper está sendo carregado na variável _dbw_. 
 
 ### Exemplo 1
 

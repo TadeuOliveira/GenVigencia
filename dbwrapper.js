@@ -39,6 +39,19 @@ global.vigenciaHelpers = {
         vigencia.setDate(proximaRegra.vigencia)
         return vigencia.toISOString().substr(0,10)
     },
+    getVigenciaOneCase: (date,regras) => {
+        let d = new Date(date+'T00:00:00')
+        let [{vigencia}] = regras
+        let index = regras.findIndex(e => e.min <= d.getDate() && e.max >= d.getDate())
+        d.setMonth(d.getMonth() + (index+1))
+        d.setDate(vigencia)
+        return d.toISOString().substr(0,10)
+    },
+    getNextVigenciaOneCase: (date,regras) => {
+        let d = new Date(date+'T00:00:00')
+        d.setMonth(d.getMonth()+1)
+        return d.toISOString().substr(0,10)
+    },
     getVigenciaAgendada: (date,agenda) => {
         let d = new Date(date)
         let {vigencia} = agenda.find(e => {
