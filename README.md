@@ -6,10 +6,11 @@
   * [Pré-requisitos](#pré-requisitos)
   * [Instalação](#instalação)
   * [Execução](#execução)
- * [Forma de uso](#forma-de-uso)
- * [Argumentos](#argumentos)
- * [Retorno](#retorno)
- * [Exemplos](#exemplos)
+* [Forma de uso](#forma-de-uso)
+  * [Visão Geral](#visão-geral)
+  * [Argumentos](#argumentos)
+  * [Retorno](#retorno)
+* [Exemplos](#exemplos)
 	* [Exemplo 1](#exemplo-1)
 	* [Exemplo 2](#exemplo-2)
 	* [Exemplo 3](#exemplo-3)
@@ -86,13 +87,13 @@ Os argumentos para as funções são os seguintes:
 - **loopController**
 	- isodate: data calculada pelo _genNextDate_
 	- loopIndex: o índice do loop. Seu valor é 0 na primeira iteração
-	- listSize: comprimento da lista até o momento da iteração atual
+	- list: referência para a lista corrente
 	- args: objeto contento as chaves inseridas no objeto _args_
 	- initdate: data de entrada do programa (a mesma de isodate em _genFirstDate_)
 - **bloqNextDate**
 	- isodate: data calculada pelo _genNextDate_
 	- loopIndex: o índice do loop. Seu valor é 0 na primeira iteração
-	- listSize: comprimento da lista até o momento da iteração atual
+	- list: referência para a lista corrente
 	- args: objeto contento as chaves inseridas no objeto _args_
 	- initdate: data de entrada do programa (a mesma de isodate em _genFirstDate_)
 
@@ -232,7 +233,7 @@ let vigConfig = {
     },
     genList: true,
     loopController: {
-        func: (isodate,loopIndex,listSize,args,initdate) => {
+        func: (isodate,loopIndex,list,args,initdate) => {
             return list < 3
         }
     },
