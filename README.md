@@ -69,7 +69,7 @@ Todas as funções devem possuir a chave _func_, onde é implementada a função
 
 O leitor que detém algum conhecimento sobre programação funcional deve ter percebido, neste momento, que isto poderia ser feito com _currying_, evitando a necessidade de repetição dos argumentos fixos. No entanto, para  fins de reduzir ao máximo o grau de complexidade - mesmo que teórica - na utilização do programa, opta-se pela redundância.
 
-O campo **forceSort**, que pode ser encontrado no código, não é apresentado neste diagrama por não alterar em nada o fluxo da geração de vigência. Trata-se de um booleano que determina se o programa deve ordenar as datas (o que pode ser útil se existe um retrocesso na geração de vigências numa lista.
+O campo **forceSort**, que pode ser encontrado no código, não é apresentado neste diagrama por não alterar em nada o fluxo da geração de vigência. Trata-se de um booleano que determina se o programa deve ordenar as datas (o que pode ser útil se existe um retrocesso na geração de vigências numa lista).
 
 ### Argumentos
 Os argumentos para as funções são os seguintes:
@@ -353,5 +353,9 @@ console.log(dbw.geraVigencia(
 
 Segue uma descrição dos templates implementados atualmente:
 
-- **agendada**: recebe uma agenda, retorna a data de vigência que satisfaça a seguinte regra: a data atual deve estar entre a data mínima e a data máxima em alguma entrada na agenda.
-- **direta**: recebe um objeto de regras, retorna a data de vigência que satisfaça a seguinte regra: o dia atual deve estar entre o dia mínimo e o dia máximo em alguma entrada nas regras.
+- **agendada**: recebe uma agenda. Retorna a data de vigência que satisfaça a seguinte regra: a data de entrada deve estar entre a data mínima e a data máxima em alguma entrada na agenda.
+- **direta**: recebe um objeto de regras. Retorna a data de vigência que satisfaça a seguinte regra: a data de entrada deve estar entre o dia mínimo e o dia máximo em alguma entrada nas regras.
+- **incremental**: recebe um inteiro n, representando número de dias. Retorna a data de entrada acrescida de n dias.
+- **diretaListada**: recebe um objeto de regras e um inteiro n. Retorna a primeira vigência sob os mesmos critérios da *direta* acrescida das (n-1) vigências posteriores, totalizando n datas.
+- **diretaLimitada**: recebe um objeto de regras e um inteiro n. Retorna a primeira vigência sob os mesmos critérios da *direta* e mais uma lista das próximas vigências, onde todas devam estar num intervalo de n dias da data de entrada.
+- **diretaDelimitada**: recebe um objeto de regras e dois inteiros min e max. Retorna a primeira vigência sob os mesmos critérios de *direta* devendo, além disso, estar posterior a min dias da data de entrada. Além disso, acrescenta uma lista de vigências posteriores à primeira onde estas devam estar a um intervalo de, no máximo, max dias desde a data de entrada.

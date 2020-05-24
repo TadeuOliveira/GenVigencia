@@ -75,31 +75,12 @@ let regras = [
         vigencia: 15
     },
 ]
-//também é possível sobrecarregar os templates incluindo novas chaves
-console.log('direta, com 3 datas, evitando dias 01')
+console.log("diretaLimitada")
 console.log(dbw.geraVigencia(
     '2020-05-12',
-    dbw.templates.direta(regras,{
-        bloqFirstDate: {
-            func: (isodate,args,initdate) => {
-                let d = new Date(isodate+'T00:00:00')
-                return d.getDate() == 1
-            }
-        },
-        genList: true,
-        loopController: {
-            func: (isodate,loopIndex,list,args,initdate) => {
-                return list.length < 3
-            }
-        },
-        bloqNextDate: {
-            func: (isodate,args,initdate) => {
-                let d = new Date(isodate+'T00:00:00')
-                return d.getDate() == 1
-            }
-        },
-    })
+    dbw.templates.diretaDelimitada(regras,19,50)
 ))
+//console.log('is after n days: ',dbw.helpers.isAfterNDays('2020-07-01','2020-05-12',45))
 let vigConfig = {
     genFirstDate: {
         func: (isodate,args) => {

@@ -67,12 +67,6 @@ global.vigenciaHelpers = {
     }
 }
 
-global.templatesVigencia = {
-
-
-
-}
-
 function geraVigencia(isodate,params){
 
     let helpers = vigenciaHelpers
@@ -120,7 +114,7 @@ function geraVigencia(isodate,params){
 }
 
 const vigenciaTemplates = {
-    
+    //geram uma data
     agendada: (agenda,updates) => {
         let helpers = vigenciaHelpers
         let tpl = {
@@ -158,6 +152,127 @@ const vigenciaTemplates = {
                     return helpers.getNextVigencia(isodate,regras)
                 },
                 args: {regras}
+            }
+        }
+        let config = Object.assign(tpl,updates)
+        return config
+    },
+    incremental: (numDays,updates) => {
+        let helpers = vigenciaHelpers
+        let tpl = {
+            genFirstDate: {
+                func: (isodate, args) => {
+                    let {regras} = args
+                    return helpers.skipNDays(isodate,numDays)
+                },
+                args: {numDays}
+            },
+            genNextDate: {
+                func: (isodate, args) => {
+                    let {numDays} = args
+                    return helpers.skipNDays(isodate,numDays)
+                },
+                args: {numDays}
+            }
+        }
+        let config = Object.assign(tpl,updates)
+        return config
+    },
+    //geram lista de datas
+    diretaListada: (regras,listSize,updates) => {
+        let helpers = vigenciaHelpers
+        let tpl = {
+            genFirstDate: {
+                func: (isodate, args) => {
+                    let {regras} = args
+                    return helpers.getVigencia(isodate,regras)
+                },
+                args: {regras}
+            },
+            genNextDate: {
+                func: (isodate, args) => {
+                    let {regras} = args
+                    return helpers.getNextVigencia(isodate,regras)
+                },
+                args: {regras}
+            },
+            genList: true,
+            loopController: {
+                func: (isodate,loopIndex,list,args,initdate) => {
+                    let {listSize} = args
+                    return list.length < listSize
+                },
+                args: {listSize}
+            }
+        }
+        let config = Object.assign(tpl,updates)
+        return config
+    },
+    diretaLimitada: (regras,limite,updates) => {
+        let helpers = vigenciaHelpers
+        let tpl = {
+            genFirstDate: {
+                func: (isodate, args) => {
+                    let {regras} = args
+                    return helpers.getVigencia(isodate,regras)
+                },
+                args: {regras}
+            },
+            genNextDate: {
+                func: (isodate, args) => {
+                    let {regras} = args
+                    return helpers.getNextVigencia(isodate,regras)
+                },
+                args: {regras}
+            },
+            genList: true,
+            loopController: {
+                func: (isodate,loopIndex,list,args,initdate) => {
+                    let {limite} = args
+                    let ultrapassouNDias = helpers.isAfterNDays(isodate,initdate,limite)
+                    if(ultrapassouNDias) list.pop()
+                    return !ultrapassouNDias
+                },
+                args: {limite}
+            }
+        }
+        let config = Object.assign(tpl,updates)
+        return config
+    },
+    diretaDelimitada: (regras,min,max,updates) => {
+        let helpers = vigenciaHelpers
+        let tpl = {
+            genFirstDate: {
+                func: (isodate,args) => {
+                    let {regras} = args
+                    return helpers.getVigencia(isodate,regras)
+                },
+                args: {regras}
+            },
+            bloqFirstDate: {
+                func: (isodate,args,initdate) => {
+                    let {min} = args
+                    let atingiuMin = helpers.isAfterNDays(isodate,initdate,min)
+                    return !atingiuMin
+                },
+                args: {min}
+            },
+            genNextDate: {
+                func: (isodate, args) => {
+                    let {regras} = args
+                    return helpers.getNextVigencia(isodate,regras)
+                },
+                args: {regras}
+            },
+            genList: true,
+            loopController: {
+                func: (isodate,loopIndex,list,args,initdate) => {
+                    let {max} = args
+                    let ultrapassouMax = helpers.isAfterNDays(isodate,initdate,max)
+                    if(ultrapassouMax) list.pop()
+                    return !ultrapassouMax 
+                },
+                args: {max}
             }
         }
         let config = Object.assign(tpl,updates)
